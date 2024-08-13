@@ -1,12 +1,14 @@
-package com.sparta.scheduler.entity;
+package com.sparta.scheduler.dto;
+
+import lombok.Getter;
 
 import java.util.Date;
 
-public class Event {
-    private Long eventId;
+@Getter
+public class EventRequestDto {
     private String eventName;
     private String managerName;
     private String password;
     private Date upToDate;
-
+    private Date createDate;
 }
