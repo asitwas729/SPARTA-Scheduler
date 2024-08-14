@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
@@ -20,9 +22,12 @@ public class EventRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    Date today = new Date(System.currentTimeMillis());
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    // 서버시작시간(현재시간이 아니라).... 왜 안되지...,?
+//    Date today = new Date(System.currentTimeMillis());
+//    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    LocalDateTime now = LocalDateTime.now();
+    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     // 일정 저장
     public ScheduleEvent eventSave(ScheduleEvent scheduleEvent){
@@ -34,10 +39,10 @@ public class EventRepository {
             preparedStatement.setString(1, scheduleEvent.getEventName());
             preparedStatement.setLong(2, scheduleEvent.getManagerId());
             preparedStatement.setString(3, scheduleEvent.getPassword());
-            preparedStatement.setString(4, dateFormat.format(today));
-            preparedStatement.setString(5, dateFormat.format(today));
-            return preparedStatement;
-        },
+            preparedStatement.setString(4, now.format(dateFormat));
+            preparedStatement.setString(5, now.format(dateFormat));
+                return preparedStatement;
+            },
             keyHolder);
 
         Long id = keyHolder.getKey().longValue();
@@ -92,7 +97,7 @@ public class EventRepository {
     public void updateEvent(Long eventId, EventRequestDto requestDto){
         // DB 조회
         String sql = "UPDATE scheduler SET eventName = ?, managerId = ?, upToDate = ? WHERE eventId = ? AND password = ?";
-        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerId(), dateFormat.format(today), eventId, requestDto.getPassword());
+        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerId(),  now.format(dateFormat), eventId, requestDto.getPassword());
     }
 //    public void updateEvent(Long eventId, String password, EventRequestDto requestDto){
 //        // DB 조회
