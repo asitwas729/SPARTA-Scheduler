@@ -10,7 +10,6 @@ public class EventResponseDto {
     private Long eventId;
     private String eventName;
     private String managerName;
-    private String password;
     private Date createDate;
     private Date upToDate;
 
@@ -18,12 +17,12 @@ public class EventResponseDto {
         this.eventId = event.getEventId();
         this.eventName = event.getEventName();
         this.managerName = event.getManagerName();
-        this.password = event.getPassword();
         this.createDate = event.getCreateDate();
         this.upToDate = event.getUpToDate();
     }
 
-    public EventResponseDto(Long eventId, String eventName, String managerName, Date createDate, Date upToDate) {
+    // DB에서 가져온 값
+    public EventResponseDto(Long eventId, String eventName, String managerName, java.sql.Date createDate, java.sql.Date upToDate) {
         this.eventId = eventId;
         this.eventName = eventName;
         this.managerName = managerName;

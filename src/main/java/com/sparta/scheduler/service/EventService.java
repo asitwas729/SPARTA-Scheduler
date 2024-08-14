@@ -38,8 +38,8 @@ public class EventService {
         }
     }
 
-//    public List<EventResponseDto> getEvents(){
-//        // DB 조회
-//        return eventRepository.findAll();
-//    }
+    public List<EventResponseDto> getEvents(){
+        // DB 조회
+        return eventRepository.findAll();
+    }
 }

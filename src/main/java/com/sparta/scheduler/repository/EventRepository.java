@@ -21,6 +21,7 @@ public class EventRepository {
 
     Date today = new Date(System.currentTimeMillis());
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
     // 일정 저장
@@ -66,24 +67,25 @@ public class EventRepository {
 
     
     // 일정 목록 조회
-//    public List<EventResponseDto> findAll(){
-//        // DB 조회
-//        String sql = "SELECT * FROM scheduler";
-//
-//        return jdbcTemplate.query(sql, new RowMapper<EventResponseDto>() {
-//            @Override
-//            public EventResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-//                // sql(scheduler data) -> eventResponseDto
-//                Long evnetId = rs.getLong("eventId");
-//                String eventName = rs.getString("eventName");
-//                String managerName = rs.getString("managerName");
-//                Date createDate = rs.getDate("createDate");
-//                Date upToDate = rs.getDate("upToDate");
-//
-//                return new EventResponseDto(evnetId, eventName, managerName, createDate, upToDate);
-//            }
-//        });
-//    }
+    public List<EventResponseDto> findAll(){
+        // DB 조회
+        String sql = "SELECT eventId, eventName, managerName, createDate, upToDate FROM scheduler ORDER BY upToDate DESC";
+
+        return jdbcTemplate.query(sql, new RowMapper<EventResponseDto>() {
+            @Override
+            public EventResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // sql(scheduler data) -> eventResponseDto
+                Long eventId = rs.getLong("eventId");
+                String eventName = rs.getString("eventName");
+                String managerName = rs.getString("managerName");
+                Date createDate = rs.getDate("createDate");
+                Date upToDate = rs.getDate("upToDate");
+                //upToDate = Date.valueOf(simpleDateFormat.format(upToDate));   // 굳이 안해도 Date형식(yyyy-MM-dd)
+
+                return new EventResponseDto(eventId, eventName, managerName, createDate, upToDate);
+            }
+        });
+    }
     
     // 일정 수정
     

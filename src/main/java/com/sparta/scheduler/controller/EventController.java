@@ -29,9 +29,9 @@ public class EventController {
         return eventService.findById(eventId);
     }
 
-//    @GetMapping("/event")
-//    public List<EventResponseDto> getEvents(){
-//        return eventService.getEvents();
-//    }
+    @GetMapping("/event")
+    public List<EventResponseDto> getEvents(){
+        return eventService.getEvents();
+    }
 
 }
