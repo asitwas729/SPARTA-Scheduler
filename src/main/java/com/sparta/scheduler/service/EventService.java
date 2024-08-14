@@ -28,6 +28,16 @@ public class EventService {
         return new EventResponseDto(saveEvent);
     }
 
+    public ScheduleEvent findById(Long eventId){
+        // DB 조회
+        ScheduleEvent event = eventRepository.findById(eventId);
+        if (event != null){
+            return eventRepository.findById(eventId);
+        } else {
+            throw new IllegalArgumentException("선택한 일정은 존재하지않습니다.");
+        }
+    }
+
 //    public List<EventResponseDto> getEvents(){
 //        // DB 조회
 //        return eventRepository.findAll();

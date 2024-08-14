@@ -2,6 +2,7 @@ package com.sparta.scheduler.controller;
 
 import com.sparta.scheduler.dto.EventRequestDto;
 import com.sparta.scheduler.dto.EventResponseDto;
+import com.sparta.scheduler.entity.ScheduleEvent;
 import com.sparta.scheduler.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,6 +22,11 @@ public class EventController {
     @PostMapping("/event")
     public EventResponseDto createEvent(@RequestBody EventRequestDto requestDto){
         return eventService.createEvent(requestDto);
+    }
+
+    @GetMapping("/event/{id}")
+    public ScheduleEvent findById(@PathVariable("id") Long eventId){
+        return eventService.findById(eventId);
     }
 
 //    @GetMapping("/event")

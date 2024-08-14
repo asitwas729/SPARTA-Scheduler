@@ -26,15 +26,15 @@ public class EventRepository {
     // 일정 저장
     public ScheduleEvent eventSave(ScheduleEvent scheduleEvent){
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
-        String sql = "INSERT INTO scheduler (eventName, managerName, password, upToDate) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO scheduler (eventName, managerName, password, upToDate, createDate) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS);
-
             preparedStatement.setString(1, scheduleEvent.getEventName());
             preparedStatement.setString(2, scheduleEvent.getManagerName());
             preparedStatement.setString(3, scheduleEvent.getPassword());
             preparedStatement.setString(4, dateFormat.format(today));
+            preparedStatement.setString(5, dateFormat.format(today));
             return preparedStatement;
         },
             keyHolder);
@@ -46,6 +46,23 @@ public class EventRepository {
     }
 
     // 일정 조회
+    public ScheduleEvent findById(Long eventId){
+        // DB 조회
+        String sql = "SELECT * FROM scheduler WHERE eventId = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                ScheduleEvent event = new ScheduleEvent();
+                event.setEventName(resultSet.getString("eventName"));
+                event.setManagerName(resultSet.getString("managerName"));
+                event.setCreateDate(resultSet.getDate("createDate"));
+                event.setUpToDate(resultSet.getDate("upToDate"));
+                return event;
+            } else {
+                return null;
+            }
+        }, eventId);
+    }
 
     
     // 일정 목록 조회
