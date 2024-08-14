@@ -1,5 +1,6 @@
 package com.sparta.scheduler.repository;
 
+import com.sparta.scheduler.dto.EventRequestDto;
 import com.sparta.scheduler.dto.EventResponseDto;
 import com.sparta.scheduler.entity.ScheduleEvent;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +22,6 @@ public class EventRepository {
 
     Date today = new Date(System.currentTimeMillis());
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
     // 일정 저장
@@ -54,6 +54,7 @@ public class EventRepository {
         return jdbcTemplate.query(sql, resultSet -> {
             if (resultSet.next()) {
                 ScheduleEvent event = new ScheduleEvent();
+                event.setEventId(resultSet.getLong("eventId"));
                 event.setEventName(resultSet.getString("eventName"));
                 event.setManagerName(resultSet.getString("managerName"));
                 event.setCreateDate(resultSet.getDate("createDate"));
@@ -88,6 +89,35 @@ public class EventRepository {
     }
     
     // 일정 수정
+    public void updateEvent(Long eventId, EventRequestDto requestDto){
+        // DB 조회
+        String sql = "UPDATE scheduler SET eventName = ?, managerName = ?, upToDate = ? WHERE eventId = ? AND password = ?";
+        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerName(), dateFormat.format(today), eventId, requestDto.getPassword());
+    }
+//    public void updateEvent(Long eventId, String password, EventRequestDto requestDto){
+//        // DB 조회
+//        String sql = "UPDATE scheduler SET eventName = ?, managerName = ?, upToDate = ? WHERE eventId = ? AND password = ?";
+//        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerName(), dateFormat.format(today), eventId, password);
+//    }
+
+    // 비밀번호 맞는지
+    public ScheduleEvent findByPassword(Long eventId, String password){
+        // DB 조회
+        String sql = "SELECT * FROM scheduler WHERE eventId = ? and password = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if (resultSet.next()) {
+                ScheduleEvent event = new ScheduleEvent();
+                event.setEventName(resultSet.getString("eventName"));
+                event.setManagerName(resultSet.getString("managerName"));
+                event.setCreateDate(resultSet.getDate("createDate"));
+                event.setUpToDate(resultSet.getDate("upToDate"));
+                return event;
+            } else {
+                return null;
+            }
+        }, eventId, password);
+    }
     
     // 일정 삭제
 }

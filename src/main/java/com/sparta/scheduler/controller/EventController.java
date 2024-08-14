@@ -34,4 +34,16 @@ public class EventController {
         return eventService.getEvents();
     }
 
+//    @PutMapping("/event/{id}/{password}")
+//    public Long updateEvent(@PathVariable("id") Long eventId, @PathVariable("password") String password, @RequestBody EventRequestDto requestDto){
+//        // 수정할때, password까지 맞아야 수정창으로 넘어가야될것같아서 password도 따로 받음
+//        // 근데? password를 url에 받으면 유출되지않을까?(다 만들고 생각해보기!)
+//        return eventService.updateEvent(eventId, password, requestDto);
+//    }
+    @PutMapping("/event/{id}")
+    public ScheduleEvent updateEvent(@PathVariable("id") Long eventId, @RequestBody EventRequestDto requestDto){
+        // 그래두 body-raw에 json형식으로 비밀번호를 포함하는 방법이 더 보안에 좋을것같아서 변경
+        return eventService.updateEvent(eventId, requestDto);
+    }
+
 }

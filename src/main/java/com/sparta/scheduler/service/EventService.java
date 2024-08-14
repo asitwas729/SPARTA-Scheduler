@@ -39,7 +39,37 @@ public class EventService {
     }
 
     public List<EventResponseDto> getEvents(){
-        // DB 조회
         return eventRepository.findAll();
+    }
+
+//    public Long updateEvent(Long eventId, String password, EventRequestDto requestDto){
+//        ScheduleEvent beEvent = eventRepository.findById(eventId);
+//        ScheduleEvent bePassword = eventRepository.findByPassword(eventId, password);
+//        if (beEvent != null){
+//            if (bePassword != null){
+//                eventRepository.updateEvent(eventId, password, requestDto);
+//                return eventId;
+//            } else {
+//                throw new IllegalArgumentException("선택한 일정의 비밀번호가 맞지않습니다.");
+//            }
+//        } else {
+//            throw new IllegalArgumentException("선택한 일정은 존재하지않습니다.");
+//        }
+//
+//    }
+    public ScheduleEvent updateEvent(Long eventId, EventRequestDto requestDto){
+        ScheduleEvent beEvent = eventRepository.findById(eventId);
+        ScheduleEvent bePassword = eventRepository.findByPassword(eventId, requestDto.getPassword());
+        if (beEvent != null){
+            if (bePassword != null){
+                eventRepository.updateEvent(eventId, requestDto);
+                return eventRepository.findById(eventId);
+            } else {
+                throw new IllegalArgumentException("선택한 일정의 비밀번호가 맞지않습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("선택한 일정은 존재하지않습니다.");
+        }
+
     }
 }
