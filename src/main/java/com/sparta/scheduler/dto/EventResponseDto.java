@@ -9,23 +9,23 @@ import java.util.Date;
 public class EventResponseDto {
     private Long eventId;
     private String eventName;
-    private String managerName;
+    private Long managerId;
     private Date createDate;
     private Date upToDate;
 
     public EventResponseDto(ScheduleEvent event) {
         this.eventId = event.getEventId();
         this.eventName = event.getEventName();
-        this.managerName = event.getManagerName();
+        this.managerId = event.getManagerId();
         this.createDate = event.getCreateDate();
         this.upToDate = event.getUpToDate();
     }
 
     // DB에서 가져온 값
-    public EventResponseDto(Long eventId, String eventName, String managerName, java.sql.Date createDate, java.sql.Date upToDate) {
+    public EventResponseDto(Long eventId, String eventName, Long managerId, Date createDate, Date upToDate) {
         this.eventId = eventId;
         this.eventName = eventName;
-        this.managerName = managerName;
+        this.managerId = managerId;
         this.createDate = createDate;
         this.upToDate = upToDate;
     }

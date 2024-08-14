@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -14,14 +13,14 @@ import java.util.Date;
 public class ScheduleEvent {
     private Long eventId;
     private String eventName;
-    private String managerName;
+    private Long managerId;
     private String password;
     private Date createDate;
     private Date upToDate;
 
     public ScheduleEvent(EventRequestDto requestDto){
         this.eventName = requestDto.getEventName();
-        this.managerName = requestDto.getManagerName();
+        this.managerId = requestDto.getManagerId();
         this.password = requestDto.getPassword();
         if (requestDto.getCreateDate() != null){
             this.upToDate = requestDto.getUpToDate();

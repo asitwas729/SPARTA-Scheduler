@@ -7,7 +7,7 @@ import java.util.Date;
 @Getter
 public class EventRequestDto {
     private String eventName;
-    private String managerName;
+    private Long managerId;
     private String password;
     private Date upToDate;
     private Date createDate;

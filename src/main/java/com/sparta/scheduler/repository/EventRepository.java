@@ -27,12 +27,12 @@ public class EventRepository {
     // 일정 저장
     public ScheduleEvent eventSave(ScheduleEvent scheduleEvent){
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
-        String sql = "INSERT INTO scheduler (eventName, managerName, password, upToDate, createDate) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO scheduler (eventName, managerId, password, upToDate, createDate) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(
                 sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, scheduleEvent.getEventName());
-            preparedStatement.setString(2, scheduleEvent.getManagerName());
+            preparedStatement.setLong(2, scheduleEvent.getManagerId());
             preparedStatement.setString(3, scheduleEvent.getPassword());
             preparedStatement.setString(4, dateFormat.format(today));
             preparedStatement.setString(5, dateFormat.format(today));
@@ -56,7 +56,7 @@ public class EventRepository {
                 ScheduleEvent event = new ScheduleEvent();
                 event.setEventId(resultSet.getLong("eventId"));
                 event.setEventName(resultSet.getString("eventName"));
-                event.setManagerName(resultSet.getString("managerName"));
+                event.setManagerId(resultSet.getLong("managerId"));
                 event.setCreateDate(resultSet.getDate("createDate"));
                 event.setUpToDate(resultSet.getDate("upToDate"));
                 return event;
@@ -70,7 +70,7 @@ public class EventRepository {
     // 일정 목록 조회
     public List<EventResponseDto> findAll(){
         // DB 조회
-        String sql = "SELECT eventId, eventName, managerName, createDate, upToDate FROM scheduler ORDER BY upToDate DESC";
+        String sql = "SELECT eventId, eventName, managerId, createDate, upToDate FROM scheduler ORDER BY upToDate DESC";
 
         return jdbcTemplate.query(sql, new RowMapper<EventResponseDto>() {
             @Override
@@ -78,12 +78,12 @@ public class EventRepository {
                 // sql(scheduler data) -> eventResponseDto
                 Long eventId = rs.getLong("eventId");
                 String eventName = rs.getString("eventName");
-                String managerName = rs.getString("managerName");
+                Long managerId = rs.getLong("managerId");
                 Date createDate = rs.getDate("createDate");
                 Date upToDate = rs.getDate("upToDate");
                 //upToDate = Date.valueOf(simpleDateFormat.format(upToDate));   // 굳이 안해도 Date형식(yyyy-MM-dd)
 
-                return new EventResponseDto(eventId, eventName, managerName, createDate, upToDate);
+                return new EventResponseDto(eventId, eventName, managerId, createDate, upToDate);
             }
         });
     }
@@ -91,13 +91,13 @@ public class EventRepository {
     // 일정 수정
     public void updateEvent(Long eventId, EventRequestDto requestDto){
         // DB 조회
-        String sql = "UPDATE scheduler SET eventName = ?, managerName = ?, upToDate = ? WHERE eventId = ? AND password = ?";
-        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerName(), dateFormat.format(today), eventId, requestDto.getPassword());
+        String sql = "UPDATE scheduler SET eventName = ?, managerId = ?, upToDate = ? WHERE eventId = ? AND password = ?";
+        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerId(), dateFormat.format(today), eventId, requestDto.getPassword());
     }
 //    public void updateEvent(Long eventId, String password, EventRequestDto requestDto){
 //        // DB 조회
-//        String sql = "UPDATE scheduler SET eventName = ?, managerName = ?, upToDate = ? WHERE eventId = ? AND password = ?";
-//        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getManagerName(), dateFormat.format(today), eventId, password);
+//        String sql = "UPDATE scheduler SET eventName = ?, managerId = ?, upToDate = ? WHERE eventId = ? AND password = ?";
+//        jdbcTemplate.update(sql, requestDto.getEventName(), requestDto.getmanagerId(), dateFormat.format(today), eventId, password);
 //    }
 
     // 비밀번호 맞는지
@@ -109,7 +109,7 @@ public class EventRepository {
             if (resultSet.next()) {
                 ScheduleEvent event = new ScheduleEvent();
                 event.setEventName(resultSet.getString("eventName"));
-                event.setManagerName(resultSet.getString("managerName"));
+                event.setManagerId(resultSet.getLong("managerId"));
                 event.setCreateDate(resultSet.getDate("createDate"));
                 event.setUpToDate(resultSet.getDate("upToDate"));
                 return event;
