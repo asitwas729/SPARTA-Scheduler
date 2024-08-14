@@ -46,4 +46,9 @@ public class EventController {
         return eventService.updateEvent(eventId, requestDto);
     }
 
+    @DeleteMapping("/event/{id}")
+    public ScheduleEvent deleteEvent(@PathVariable("id") Long eventId, @RequestBody EventRequestDto requestDto){
+        return eventService.deleteEvent(eventId, requestDto);
+    }
+
 }

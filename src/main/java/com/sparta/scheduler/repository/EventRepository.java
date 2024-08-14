@@ -120,4 +120,9 @@ public class EventRepository {
     }
     
     // 일정 삭제
+
+    public void deleteEvent(Long eventId, EventRequestDto requestDto){
+        String sql = "DELETE FROM scheduler WHERE eventId = ? AND password = ?";
+        jdbcTemplate.update(sql, eventId, requestDto.getPassword());
+    }
 }
